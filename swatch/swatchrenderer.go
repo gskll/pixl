@@ -3,7 +3,6 @@ package swatch
 import (
 	"image/color"
 
-	"fyne.io/fyne"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
 )

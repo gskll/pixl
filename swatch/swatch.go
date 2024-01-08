@@ -3,11 +3,11 @@ package swatch
 import (
 	"image/color"
 
-	"fyne.io/fyne"
+	fyne "fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/widget"
 
-	"github.com/gskll/pixl/internal/apptype"
+	"github.com/gskll/pixl/apptype"
 )
 
 type Swatch struct {
