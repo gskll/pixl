@@ -2,6 +2,7 @@ package ui
 
 import (
 	"errors"
+	"image"
 	"image/png"
 	"os"
 	"strconv"
@@ -9,6 +10,8 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
+
+	"github.com/gskll/pixl/util"
 )
 
 func saveFileDialog(app *AppInit) {
@@ -100,8 +103,34 @@ func BuildNewMenu(app *AppInit) *fyne.MenuItem {
 	})
 }
 
+func BuildOpenMenu(app *AppInit) *fyne.MenuItem {
+	return fyne.NewMenuItem("Open...", func() {
+		dialog.ShowFileOpen(func(uri fyne.URIReadCloser, e error) {
+			if uri == nil {
+				return
+			} else {
+				img, _, err := image.Decode(uri)
+				if err != nil {
+					dialog.ShowError(err, app.PixlWindow)
+				}
+				app.PixlCanvas.LoadImage(img)
+				app.State.SetFilePath(uri.URI().Path())
+				imgColors := util.GetImageColors(img)
+				i := 0
+				for c := range imgColors {
+					if i == len(app.Swatches) {
+						break
+					}
+					app.Swatches[i].SetColor(c)
+					i++
+				}
+			}
+		}, app.PixlWindow)
+	})
+}
+
 func BuildMenus(app *AppInit) *fyne.Menu {
-	return fyne.NewMenu("File", BuildNewMenu(app), BuildSaveMenu(app), BuildSaveAsMenu(app))
+	return fyne.NewMenu("File", BuildNewMenu(app), BuildSaveMenu(app), BuildSaveAsMenu(app), BuildOpenMenu(app))
 }
 
 func SetupMenus(app *AppInit) {
